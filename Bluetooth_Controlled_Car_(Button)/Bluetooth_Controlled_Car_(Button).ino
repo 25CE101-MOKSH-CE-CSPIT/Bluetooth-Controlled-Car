@@ -7,8 +7,8 @@ const int PWMB = 23, BIN1 = 19, BIN2 = 21; // Left
 const int PWM_FREQ = 5000, PWM_RES = 8;
 const int PWM_CHANNEL_A = 1, PWM_CHANNEL_B = 0;
 const int MAX_SPEED = 255;
-const int TURN_SPEED = 180;      // normal forward or backward speed
-const int SLOW_SPEED = 80;       // reduced speed for gentle turning
+const int TURN_SPEED = 200;      // normal forward or backward speed
+const int SLOW_SPEED = 130;       // reduced speed for gentle turning
 
 void setup() {
   Serial.begin(115200);
@@ -47,27 +47,27 @@ void loop() {
     String command = SerialBT.readStringUntil('\n');
     command.trim();
     if (command == "FORWARD") {
-      moveMotors(TURN_SPEED, TURN_SPEED);
-    } else if (command == "BACKWARD") {
       moveMotors(-TURN_SPEED, -TURN_SPEED);
+    } else if (command == "BACKWARD") {
+      moveMotors(TURN_SPEED-30, TURN_SPEED-30);
     } else if (command == "LEFT") {
       // Rotate left in place
-      moveMotors(TURN_SPEED, -TURN_SPEED);
+      moveMotors(-TURN_SPEED, TURN_SPEED);
     } else if (command == "RIGHT") {
       // Rotate right in place
-      moveMotors(-TURN_SPEED, TURN_SPEED);
+      moveMotors(TURN_SPEED, -TURN_SPEED);
     } else if (command == "FORWARD_LEFT") {
       // Gentle left while moving forward (slow left, fast right)
-      moveMotors(TURN_SPEED, SLOW_SPEED);
+      moveMotors(-TURN_SPEED, -SLOW_SPEED);
     } else if (command == "FORWARD_RIGHT") {
       // Gentle right while moving forward (fast left, slow right)
-      moveMotors(SLOW_SPEED, TURN_SPEED);
-    } else if (command == "BACKWARD_LEFT") {_
+      moveMotors(-SLOW_SPEED, -TURN_SPEED);
+    } else if (command == "BACKWARD_LEFT") {
       // Gentle left while moving backward
-      moveMotors(-TURN_SPEED, -SLOW_SPEED);
+      moveMotors(SLOW_SPEED, TURN_SPEED-30);
     } else if (command == "BACKWARD_RIGHT") {
       // Gentle right while moving backward
-      moveMotors(-SLOW_SPEED, -TURN_SPEED);
+      moveMotors(TURN_SPEED-30, SLOW_SPEED);
     } else if (command == "STOP") {
       moveMotors(0,0);
     }
